@@ -1,0 +1,27 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+
+.datetime {
+    text-align: center;
+}
+
+#date {
+    font-size: 40px;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 20px;
+}
+
+#clock {
+    font-size: 80px;
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 4px;
+    padding: 20px 40px;
+    border: 3px solid #39ff14;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #39ff14;
+}
+
+

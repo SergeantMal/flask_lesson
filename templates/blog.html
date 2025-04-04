@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Блог</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-dark text-light">
+
+    <!-- Шапка -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><strong>Мой блог</strong></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog/">Блог</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contacts/">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контейнер -->
+        <div class="container mt-5">
+            <div class="row">
+                <!-- Основной контент -->
+                <div class="col-md-8">
+                    <div class="mb-4">
+                        <h2>Заголовок статьи</h2>
+                        <p>04 апреля 2025</p>
+                        <p>
+                            Это пример простой статьи в блоге. Здесь может быть любой текст: описание, новости, мысли или заметки.
+                            Ты можешь добавить картинки, форматирование или ссылки.
+                        </p>
+                        <!-- Секция 2: Карточки -->
+                        <div class="row mt-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-bg-secondary p-3" >
+                                    <img src="../static/images/man1.jpg" class="card-img-top" alt="Карточка 1">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Иван Иванов</h5>
+                                        <p class="card-text">
+                                          <p><strong>Email:</strong> ivan@example.com</p>
+                                          <p><strong>Дата рождения:</strong> 12 марта 1990</p>
+                                          <p><strong>Город:</strong> Москва</p>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-bg-secondary p-3">
+                                    <img src="../static/images/man2.jpg" class="card-img-top" alt="Карточка 2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Петр Сидоров</h5>
+                                        <p class="card-text">
+                                          <p><strong>Email:</strong> petr@example.com</p>
+                                          <p><strong>Дата рождения:</strong> 04 января 2001</p>
+                                          <p><strong>Город:</strong> Воркута</p>
+                                      </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-bg-secondary p-3">
+                                    <img src="../static/images/woman1.jpg" class="card-img-top" alt="Карточка 3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Ольга Воробьева</h5>
+                                        <p class="card-text">
+                                          <p><strong>Email:</strong> olga@example.com</p>
+                                          <p><strong>Дата рождения:</strong> 29 июня 1995</p>
+                                          <p><strong>Город:</strong> Екатеринбург</p>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary">Читать далее</a>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-4">
+                        <h2>Ещё один пост</h2>
+                        <p>03 апреля 2025</p>
+                        <p>Ещё один пример поста. Содержимое может быть любым, и ты можешь подгружать статьи из базы данных или файлов.</p>
+
+                        <div class="accordion" id="accordionExample">
+                            <!-- Иван Иванов -->
+                            <div class="accordion-item text-bg-secondary">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button text-bg-secondary " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Иван Иванов
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        Опытный инженер, увлеченный новыми технологиями. Любит решать сложные задачи, путешествовать и изучать историю.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Петр Сидоров -->
+                            <div class="accordion-item text-bg-secondary">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button text-bg-secondary collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Петр Сидоров
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        Талантливый маркетолог, который всегда находит нестандартные решения. Увлекается бегом, чтением бизнес-книг и кулинарией.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ольга Воробьева -->
+                            <div class="accordion-item text-bg-secondary">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button text-bg-secondary collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Ольга Воробьева
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        Креативный дизайнер с чувством стиля. Обожает рисовать, создавать уют в доме и экспериментировать с модой.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <a href="#" class="btn btn-primary">Читать далее</a>
+                    </div>
+                </div>
+
+                <!-- Боковая панель -->
+                <div class="col-md-4">
+                    <div class="p-3 mb-4 data-bs-theme='dark' rounded">
+                        <h4>Обо мне</h4>
+                        <p>Привет! Это мой блог. Здесь я делюсь своими мыслями, проектами и разными идеями.</p>
+                    </div>
+                    <div class="p-3 mb-4 data-bs-theme='dark' rounded">
+                        <h4>Категории</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Технологии</a></li>
+                            <li><a href="#">Жизнь</a></li>
+                            <li><a href="#">Программирование</a></li>
+                            <li><a href="#">Проекты</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+        <!-- Футер -->
+        <nav class="navbar sticky-bottom bg-dark justify-content-center">
+            <footer class="bg-dark text-white text-center p-3 mt-4">
+                <p>Контактная информация: dersergeant@gmail.com</p>
+                <div>
+                    <a href="https://www.facebook.com/DerSergeant" class="text-white me-3">Facebook</a>
+                    <a href="#" class="text-white me-3">Twitter</a>
+                    <a href="#" class="text-white">Instagram</a>
+                </div>
+            </footer>
+
+        </nav>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
