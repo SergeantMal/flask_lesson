@@ -8,20 +8,24 @@ MONTHS_RU = {
     9: "сентября", 10: "октября", 11: "ноября", 12: "декабря"
 }
 
-
+pages = {
+    "index.html": "Урок <strong>VD05</strong>",
+    "blog.html": "<strong>Блог</strong>",
+    "contacts.html": "<strong>Контакты</strong>"
+}
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', title=pages['index.html'])
 
 @app.route('/blog/')
 def about():
-    return render_template('blog.html')
+    return render_template('blog.html', title=pages['blog.html'])
 
 @app.route('/contacts/')
 def contact():
-    return render_template('contacts.html')
+    return render_template('contacts.html', title=pages['contacts.html'])
 
 
 @app.route('/time')

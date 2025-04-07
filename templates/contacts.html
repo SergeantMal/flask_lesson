@@ -1,68 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Контакты</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-dark text-light">
+{% extends 'base.html' %}
 
-    <!-- Шапка -->
+{% block title %}
+    Контакты
+{% endblock %}
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">Урок <strong>VD04</strong></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/blog/">Блог</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contacts/">Контакты</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% block content %}
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <canvas id="pdf-canvas"></canvas>
     </div>
 
-    <!-- Футер -->
-        <nav class="navbar sticky-bottom bg-dark justify-content-center">
-            <footer class="bg-dark text-white text-center">
-                <p>Контактная информация: dersergeant@gmail.com</p>
-                <div>
-                    <a href="https://www.facebook.com/DerSergeant" class="text-white me-3">Facebook</a>
-                    <a href="#" class="text-white me-3">Twitter</a>
-                    <a href="#" class="text-white">Instagram</a>
-                </div>
-            </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
-    <script>
-        const pdfPath = '/static/images/CV_prostyakov.pdf'; // Убедись, что файл resume.pdf лежит рядом с index.html
-
-        const canvas = document.getElementById('pdf-canvas');
-        const ctx = canvas.getContext('2d');
-
-        pdfjsLib.getDocument(pdfPath).promise.then(pdf => {
-            return pdf.getPage(1); // Загружаем первую страницу
-        }).then(page => {
-            // Устанавливаем точный масштаб для корректного отображения
-            const viewport = page.getViewport({ scale: 1.5 });
-
-            // Настраиваем размеры canvas под PDF
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-
-            // Рисуем PDF на canvas
-            page.render({ canvasContext: ctx, viewport: viewport });
-        }).catch(err => {
-            console.error('Ошибка загрузки PDF:', err);
-        });
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+{% endblock %}
