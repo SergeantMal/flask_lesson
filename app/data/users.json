@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Простяков Сергей",
+        "email": "dersergeant@gmail.com",
+        "city": "Moscow",
+        "hobby": "Аквариумистика",
+        "age": "43"
+    },
+    {
+        "name": "Анна Иванова",
+        "email": "test@mail.ru",
+        "city": "Иваново",
+        "hobby": "Фитнесс",
+        "age": "28"
+    }
+]

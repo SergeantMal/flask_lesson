@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Анкета пользователя
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5 mb-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card bg-secondary text-light shadow">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Анкета пользователя</h3>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Имя:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="city" class="form-label">Город:</label>
+                        <input type="text" class="form-control" id="city" name="city" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hobby" class="form-label">Хобби:</label>
+                        <textarea class="form-control" id="hobby" name="hobby" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Возраст:</label>
+                        <input type="number" class="form-control" id="age" name="age" min="1" max="100" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Секция карточек пользователей -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Наши пользователи:</h2>
+    <div class="row g-4">
+        {% for user in users %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card bg-dark border-light text-light h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.name }}</h5>
+                    <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+                    <p class="card-text"><strong>Город:</strong> {{ user.city }}</p>
+                    <p class="card-text"><strong>Хобби:</strong> {{ user.hobby }}</p>
+                    <p class="card-text"><strong>Возраст:</strong> {{ user.age }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
