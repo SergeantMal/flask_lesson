@@ -11,7 +11,7 @@ MONTHS_RU = {
 }
 
 pages = {
-    "index.html": "Урок <strong>VD05</strong>",
+    "index.html": "Урок <strong>VD06</strong>",
     "blog.html": "<strong>Блог</strong>",
     "contacts.html": "<strong>Контакты</strong>",
     "form.html": "<strong>Анкета пользователя</strong>"
