@@ -1,7 +1,6 @@
-from flask import Flask, render_template, jsonify, redirect, url_for, request
+from flask import render_template, jsonify, redirect, url_for, request, flash
 from datetime import datetime
-import json
-import os
+from app.db import save_user, load_users, check_email_exists
 from app import app
 
 
@@ -18,20 +17,6 @@ pages = {
     "form.html": "<strong>Анкета пользователя</strong>"
 }
 
-DATA_FILE = 'app/data/users.json'
-
-
-def load_users():
-    if not os.path.exists(DATA_FILE):
-        return []
-    with open(DATA_FILE, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-def save_user(user_data):
-    users = load_users()
-    users.append(user_data)
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(users, f, ensure_ascii=False, indent=4)
 
 
 
@@ -42,6 +27,8 @@ def index():
 @app.route('/blog/')
 def about():
     return render_template('blog.html', title=pages['blog.html'])
+
+from flask import flash, redirect, url_for, render_template, request
 
 @app.route('/form/', methods=["GET", "POST"])
 def form():
@@ -54,13 +41,32 @@ def form():
             'age': request.form['age']
         }
 
-        if user_data['name'] and user_data['email'] and user_data['city'] and user_data['hobby'] and user_data['age']:
-            save_user(user_data)
+        if all(user_data.values()):
+            # Проверяем, существует ли email в базе данных
+            if check_email_exists(user_data['email']):
+                flash('Этот email уже зарегистрирован. Пожалуйста, используйте другой email.', 'error')
+                return render_template('form.html', title=pages['form.html'], user_data=user_data)
 
-        return redirect(url_for('form'))
+            else:
+                # Если email не существует, сохраняем пользователя
+                save_user(user_data)
+                flash('Пользователь успешно добавлен!', 'success')
+                return redirect(url_for('form'))  # Перенаправляем на форму и очищаем поля
+
+    # Загружаем пользователей для отображения на странице
     users = load_users()
 
-    return render_template('form.html', title=pages['form.html'], users=users)
+    # Передаем пустые данные или введенные ранее данные
+    user_data = {
+        'name': '',
+        'email': '',
+        'city': '',
+        'hobby': '',
+        'age': ''
+    }
+
+    return render_template('form.html', title=pages['form.html'], users=users, user_data=user_data)
+
 
 @app.route('/contacts/')
 def contact():
