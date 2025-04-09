@@ -6,51 +6,9 @@
 
 {% block content %}
 
-<div class="row justify-content-center mt-5 mb-4">
-    <div class="col-md-8 col-lg-6">
-        <div class="card bg-secondary text-light shadow">
-            <div class="card-body">
-                <h3 class="card-title text-center mb-4">Анкета пользователя</h3>
-
-                <!-- Вывод сообщений об ошибке или успехе -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div class="alert alert-info">
-                            {% for category, message in messages %}
-                                <p class="mb-0">{{ message }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-
-                <form method="post">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Имя:</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ user_data['name'] }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ user_data['email'] }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="city" class="form-label">Город:</label>
-                        <input type="text" class="form-control" id="city" name="city" value="{{ user_data['city'] }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hobby" class="form-label">Хобби:</label>
-                        <textarea class="form-control" id="hobby" name="hobby" rows="3" required>{{ user_data['hobby'] }}</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="age" class="form-label">Возраст:</label>
-                        <input type="number" class="form-control" id="age" name="age" value="{{ user_data['age'] }}" min="1" max="100" required>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Отправить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<!-- Кнопка с якорной ссылкой на анкету -->
+<div class="text-center mb-4">
+    <a href="#user-form" class="btn btn-primary btn-lg">Заполнить анкету</a>
 </div>
 
 <!-- Секция карточек пользователей -->
@@ -73,5 +31,54 @@
     </div>
 </div>
 
-{% endblock %}
+<!-- Форма анкеты -->
+<div id="user-form" class="container mt-5">
+    <div class="row justify-content-center mt-3 mb-3">
+        <div class="col-md-8 col-lg-6">
+            <div class="card bg-secondary text-light shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-3">Анкета пользователя</h3>
 
+                    <!-- Вывод сообщений об ошибке или успехе -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="alert alert-info mb-3">
+                                {% for category, message in messages %}
+                                    <p class="mb-0">{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="post">
+                        <div class="mb-2">
+                            <label for="name" class="form-label">Имя:</label>
+                            <input type="text" class="form-control form-control-sm" id="name" name="name" value="{{ user_data['name'] }}" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control form-control-sm" id="email" name="email" value="{{ user_data['email'] }}" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="city" class="form-label">Город:</label>
+                            <input type="text" class="form-control form-control-sm" id="city" name="city" value="{{ user_data['city'] }}" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="hobby" class="form-label">Хобби:</label>
+                            <textarea class="form-control form-control-sm" id="hobby" name="hobby" rows="2" required>{{ user_data['hobby'] }}</textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="age" class="form-label">Возраст:</label>
+                            <input type="number" class="form-control form-control-sm" id="age" name="age" value="{{ user_data['age'] }}" min="1" max="100" required>
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-primary btn-sm">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
