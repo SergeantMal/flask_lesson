@@ -51,18 +51,20 @@
 
     {% if title == "Урок <strong>VD06</strong>" %}
 
-    <script>
-        function updateTime() {
-            fetch('/time')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('clock').innerText = data.time;
-                    document.getElementById('date').innerText = data.date;
-                });
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-    </script>
+<script>
+    function updateTime() {
+        const now = new Date();
+
+        const time = now.toLocaleTimeString(); // формат времени
+        const date = now.toLocaleDateString(); // формат даты
+
+        document.getElementById('clock').innerText = time;
+        document.getElementById('date').innerText = date;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+</script>
 
     {% endif %}
 
