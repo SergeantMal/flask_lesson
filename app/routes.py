@@ -15,10 +15,14 @@ MONTHS_RU = {
 }
 
 pages = {
-    "index.html": "Урок <strong>VD06</strong>",
+    "index.html": "Урок <strong>VD07</strong>",
     "blog.html": "<strong>Блог</strong>",
     "contacts.html": "<strong>Контакты</strong>",
-    "form.html": "<strong>Анкета пользователя</strong>"
+    "form.html": "<strong>Анкета пользователя</strong>",
+    "account.html": "<strong>Личный кабинет</strong>",
+    "register.html": "<strong>Регистрация</strong>",
+    "login.html": "<strong>Вход</strong>",
+    "edit_account.html": "<strong>Редактирование профиля</strong>"
 }
 
 
@@ -94,7 +98,7 @@ def register():
                 flash('Имя пользователя уже занято', 'danger')
             if existing_user.email == form.email.data:
                 flash('Email уже зарегистрирован', 'danger')
-            return render_template('register.html', form=form)  # Вернёт обратно форму
+            return render_template('register.html', form=form, title=pages['register.html'])  # Вернёт обратно форму
         else:
             hashed_password = generate_password_hash(form.password.data)
             user = Accounts(
@@ -107,7 +111,7 @@ def register():
             flash('Регистрация прошла успешно. Теперь вы можете войти.', 'success')
             return redirect(url_for('login'))
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, title=pages['register.html'])
 
 
 # Авторизация
@@ -122,7 +126,7 @@ def login():
             return redirect(url_for('dashboard'))
         else:
             flash('Неверный логин или пароль', 'danger')
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, title=pages['login.html'])
 
 # Личный кабинет (доступен только авторизованным)
 @app.route('/account')
@@ -130,7 +134,7 @@ def login():
 def dashboard():
     account = Accounts.query.get(current_user.user_id)
     user = User.query.filter_by(email=account.email).first()
-    return render_template('account.html', account=account, user=user)
+    return render_template('account.html', account=account, user=user, title=pages['account.html'])
 
 
 @app.route('/account/edit', methods=['GET', 'POST'])
@@ -166,7 +170,7 @@ def edit_account():
         flash('Данные успешно обновлены!', 'success')
         return redirect(url_for('dashboard'))
 
-    return render_template('edit_account.html', account=account, user=user)
+    return render_template('edit_account.html', account=account, user=user, title=pages['edit_account.html'])
 
 
 # Выход
