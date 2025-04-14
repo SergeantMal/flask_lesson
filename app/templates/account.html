@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Аккаунт{% endblock %}
+{% block content %}
+<h2>Добро пожаловать, {{ user.name }}!</h2>
+<ul class="list-group">
+    <li class="list-group-item"><strong>Email:</strong> {{ account.email }}</li>
+    <li class="list-group-item"><strong>Город:</strong> {{ user.city }}</li>
+    <li class="list-group-item"><strong>Возраст:</strong> {{ user.age }}</li>
+    <li class="list-group-item"><strong>Хобби:</strong> {{ user.hobby }}</li>
+</ul>
+<br>
+<a href="{{ url_for('edit_account') }}" class="btn btn-warning">Редактировать данные</a>
+{% endblock %}
+

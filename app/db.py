@@ -18,6 +18,12 @@ def create_users_table():
             email TEXT UNIQUE NOT NULL,
             hobby TEXT NOT NULL,
             age INTEGER NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS accounts (
+            user_id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
         )
     """)
     conn.commit()
@@ -70,3 +76,4 @@ def check_email_exists(email):
 
     # Если результат не None, значит email уже существует
     return result is not None
+
