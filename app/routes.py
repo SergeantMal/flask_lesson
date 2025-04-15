@@ -160,18 +160,29 @@ def edit_account():
         if new_password:
             account.password = generate_password_hash(new_password)
 
-        user.name = new_name
-        user.email = new_email
-        user.city = city
-        user.age = age
-        user.hobby = hobby
+        if user is None:
+            # Создаём нового пользователя
+            user = User(
+                email=new_email,
+                name=new_name,
+                city=city,
+                age=age,
+                hobby=hobby
+            )
+            db.session.add(user)
+        else:
+            # Обновляем данные
+            user.name = new_name
+            user.email = new_email
+            user.city = city
+            user.age = age
+            user.hobby = hobby
 
         db.session.commit()
         flash('Данные успешно обновлены!', 'success')
         return redirect(url_for('dashboard'))
 
     return render_template('edit_account.html', account=account, user=user, title=pages['edit_account.html'])
-
 
 # Выход
 @app.route('/logout')
