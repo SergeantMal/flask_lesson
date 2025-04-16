@@ -1,11 +1,13 @@
 from flask import render_template, jsonify, redirect, url_for, request, flash
 from datetime import datetime
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import requests
+from deep_translator import GoogleTranslator
 
 from app.db import save_user, load_users, check_email_exists
 from app import app, login_manager
-from app.models import db
+from app.models import db, User, Accounts
 from app.forms import RegisterForm, LoginForm
 
 MONTHS_RU = {
@@ -15,7 +17,7 @@ MONTHS_RU = {
 }
 
 pages = {
-    "index.html": "Урок <strong>VD07</strong>",
+    "index.html": "Урок <strong>VD08</strong>",
     "blog.html": "<strong>Блог</strong>",
     "contacts.html": "<strong>Контакты</strong>",
     "form.html": "<strong>Анкета пользователя</strong>",
@@ -31,9 +33,38 @@ def load_user(user_id):
     return Accounts.query.get(int(user_id))
 
 
-@app.route('/')
+
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', title=pages['index.html'])
+    translation = None
+
+    quote = {
+        "text": "",
+        "author": ""
+    }
+
+    # Загружаем новую цитату (GET)
+    if request.method == 'GET':
+        try:
+            response = requests.get("https://zenquotes.io/api/random")
+            data = response.json()[0]  # Это массив с одним словарём
+            quote['text'] = data['q']
+            quote['author'] = data['a']
+        except Exception as e:
+            quote['text'] = f"Ошибка загрузки цитаты: {e}"
+
+    # Переводим цитату (POST)
+    if request.method == 'POST':
+        quote['text'] = request.form.get('text')
+        quote['author'] = request.form.get('author')
+        try:
+            translation = GoogleTranslator(source='auto', target='ru').translate(quote['text'])
+        except Exception as e:
+            translation = "Ошибка перевода."
+
+    return render_template('index.html', quote=quote, translation=translation, title=pages['index.html'])
+
 
 @app.route('/blog/')
 def about():
@@ -79,9 +110,6 @@ def form():
 
 
 # Регистрация
-from flask import flash, redirect, render_template, request, url_for
-from werkzeug.security import generate_password_hash
-from app.models import User, Accounts  # убедись, что путь к User правильный
 
 
 @app.route('/register', methods=['GET', 'POST'])

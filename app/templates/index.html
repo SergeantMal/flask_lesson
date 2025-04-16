@@ -1,16 +1,42 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Урок VD07
+    Урок VD08
 {% endblock %}
 
-
 {% block content %}
-    <div class="container d-flex justify-content-center align-items-center">
-        <div class="datetime">
-                <div id="date">Загрузка...</div>
-                <div id="clock">Загрузка...</div>
-        </div>
+<!-- Время и дата -->
+<div class="container d-flex justify-content-center align-items-center mt-4">
+    <div class="datetime text-center">
+        <div id="date" class="fw-semibold fs-5">Загрузка...</div>
+        <div id="clock" class="fs-4">Загрузка...</div>
     </div>
+</div>
 
+<!-- Карточка с цитатой -->
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="card shadow rounded-4 p-4" style="max-width: 600px; width: 100%; background: linear-gradient(to right, #f8f9fa, #e9ecef);">
+        <h4 class="card-title text-center mb-3">📖 Цитата дня</h4>
+
+        {% if quote.text %}
+            <p class="mb-2"><span class="fw-bold">Текст:</span> <em>{{ quote.text }}</em></p>
+            <p class="mb-3"><span class="fw-bold">Автор:</span> {{ quote.author }}</p>
+        {% else %}
+            <p>⚠️ Цитата не загружена.</p>
+        {% endif %}
+
+        {% if translation %}
+            <div class="alert alert-info mt-3">
+                <strong>Перевод:</strong> {{ translation }}
+            </div>
+        {% endif %}
+
+        <form method="post" class="d-flex justify-content-center gap-2 mt-3">
+            <input type="hidden" name="text" value="{{ quote.text }}">
+            <input type="hidden" name="author" value="{{ quote.author }}">
+            <button type="submit" class="btn btn-outline-secondary">Перевести</button>
+            <a href="/" class="btn btn-outline-primary">🔄 Обновить</a>
+        </form>
+    </div>
+</div>
 {% endblock %}
