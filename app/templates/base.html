@@ -111,14 +111,14 @@
         // Функция определения местоположения по IP
         async function detectLocation() {
             try {
-                const ipResponse = await fetch('https://ipapi.co/json/');
-                const ipData = await ipResponse.json();
+                const response = await fetch('/detect-location');
+                const data = await response.json();
 
-                if (ipData.city) {
-                    return ipData.city;
+                if (data.city) {
+                    return data.city;
                 }
             } catch (error) {
-                console.log('Не удалось определить местоположение по IP:', error);
+                console.log('Не удалось получить местоположение:', error);
             }
 
             return DEFAULT_CITY;
