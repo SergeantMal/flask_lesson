@@ -9,6 +9,7 @@
     </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body class="bg-dark text-light d-flex flex-column min-vh-100">
 
@@ -26,12 +27,12 @@
                     <li class="nav-item"><a class="nav-link" href="/form/">Анкета</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contacts/">Контакты</a></li>
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Аккаунт</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Выход</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.dashboard') }}">Аккаунт</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.logout') }}">Выход</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Вход</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Регистрация</a></li>
-            {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.login') }}">Вход</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.register') }}">Регистрация</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -57,6 +58,22 @@
         {% endblock %}
     </main>
 
+    <!-- Погодный виджет -->
+    <div class="weather-widget-container">
+        <div class="weather-widget">
+            <div class="weather-content">
+                <div class="weather-icon" id="weatherIcon"></div>
+                <div class="temp" id="temperature">--°</div>
+                <div class="city" id="cityName">
+                    <svg class="location-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <span id="cityText">Загрузка...</span>
+                </div>
+                <div class="condition" id="weatherCondition">--</div>
+            </div>
+        </div>
+    </div>
 
     <!-- Футер -->
     <footer class="fixed-bottom bg-dark text-white text-center py-3">
@@ -68,32 +85,144 @@
         </div>
     </footer>
 
+    <!-- Скрипт для погодного виджета -->
+    <script>
+        // Конфигурация
+
+        const ICON_BASE_PATH = '{{ url_for("static", filename="images/new/") }}';
+
+        async function getWeather(city) {
+            try {
+                const response = await fetch(`/api/weather/${encodeURIComponent(city)}`);
+                const data = await response.json();
+
+                if (data.error) throw new Error(data.error);
+                updateWeather(data);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                if (city !== DEFAULT_CITY) {
+                    getWeather(DEFAULT_CITY);
+                } else {
+                    document.getElementById('cityText').textContent = 'Ошибка';
+                }
+            }
+        }
+
+        // Функция определения местоположения по IP
+        async function detectLocation() {
+            try {
+                const ipResponse = await fetch('https://ipapi.co/json/');
+                const ipData = await ipResponse.json();
+
+                if (ipData.city) {
+                    return ipData.city;
+                }
+            } catch (error) {
+                console.log('Не удалось определить местоположение по IP:', error);
+            }
+
+            return DEFAULT_CITY;
+        }
+
+        // Функция для генерации имени иконки
+        function getIconFileName(data) {
+            const current = data.current;
+            const timePrefix = current.is_day ? 'd' : 'n';
+
+            const condition = current.condition.text.toLowerCase();
+            let precipitation = '';
+            let storm = '';
+
+            if (condition.includes('гроза') || condition.includes('thunder')) {
+                storm = '_st';
+            }
+
+            if (condition.includes('снег с дождем') || condition.includes('sleet')) {
+                const intensity = condition.includes('небольшой') ? 1 :
+                                condition.includes('умерен') ? 2 : 3;
+                precipitation = `_rs${intensity}`;
+            }
+            else if (condition.includes('дождь') || condition.includes('rain')) {
+                const intensity = condition.includes('небольшой') ? 1 :
+                                condition.includes('умерен') ? 2 : 3;
+                precipitation = `_r${intensity}`;
+            }
+            else if (condition.includes('снег') || condition.includes('snow')) {
+                const intensity = condition.includes('небольшой') ? 1 :
+                                condition.includes('умерен') ? 2 : 3;
+                precipitation = `_s${intensity}`;
+            }
+
+            let cloudinessPart = '';
+            if (current.cloud > 25) {
+                let cloudiness;
+                if (current.cloud > 75) cloudiness = 'c3';
+                else if (current.cloud > 50) cloudiness = 'c2';
+                else cloudiness = 'c1';
+
+                cloudinessPart = `_${cloudiness}`;
+            }
+
+            let fileName;
+            if (cloudinessPart || precipitation || storm) {
+                fileName = `${timePrefix}${cloudinessPart}${precipitation}${storm}.svg`;
+            } else {
+                fileName = `${timePrefix}.svg`;
+            }
+
+            return fileName;
+        }
+
+        // Обновление интерфейса
+        function updateWeather(data) {
+            const current = data.current;
+
+            document.getElementById('cityText').textContent = data.location.name;
+            document.getElementById('temperature').textContent = `${Math.round(current.temp_c)}°`;
+            document.getElementById('weatherCondition').textContent = current.condition.text;
+
+            // Установка иконки
+            const iconFileName = getIconFileName(data);
+            const iconPath = `${ICON_BASE_PATH}${iconFileName}`;
+
+            const iconContainer = document.getElementById('weatherIcon');
+            iconContainer.innerHTML = `<img src="${iconPath}" alt="${current.condition.text}">`;
+        }
+
+        // Клик по городу - обновление данных
+        document.getElementById('cityName').addEventListener('click', async () => {
+            const city = await detectLocation();
+            getWeather(city);
+        });
+
+        // Инициализация виджета
+        async function initWidget() {
+            const city = await detectLocation();
+            getWeather(city);
+        }
+
+        // Запуск виджета
+        initWidget();
+    </script>
 
     {% if title == "Урок <strong>VD08</strong>" %}
-
-<script>
-    function updateTime() {
-        const now = new Date();
-
-        const time = now.toLocaleTimeString(); // формат времени
-        const date = now.toLocaleDateString(); // формат даты
-
-        document.getElementById('clock').innerText = time;
-        document.getElementById('date').innerText = date;
-    }
-
-    setInterval(updateTime, 1000);
-    updateTime();
-</script>
-
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            const date = now.toLocaleDateString();
+            document.getElementById('clock').innerText = time;
+            document.getElementById('date').innerText = date;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
     {% endif %}
 
     {% if title == "<strong>Контакты</strong>" %}
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const pdfPath = '/static/images/CV_prostyakov.pdf';
-
             const canvas = document.getElementById('pdf-canvas');
             const ctx = canvas.getContext('2d');
 
@@ -101,10 +230,8 @@
                 return pdf.getPage(1);
             }).then(page => {
                 const viewport = page.getViewport({ scale: 1.5 });
-
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
-
                 page.render({ canvasContext: ctx, viewport: viewport });
             }).catch(err => {
                 console.error('Ошибка загрузки PDF:', err);
@@ -112,8 +239,6 @@
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-
-
     {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

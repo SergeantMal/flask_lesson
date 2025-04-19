@@ -1,10 +1,7 @@
-from app import login_manager
+
 from flask_login import UserMixin # Этот класс даёт возможность работать с пользователем
 from flask_sqlalchemy import SQLAlchemy
 
-@login_manager.user_loader
-def load_user(user_id):
-    return Accounts.query.get(int(user_id)) # Эта строчка будет отправлять в БД запрос для поиска определённого юзера по его ID
 
 db = SQLAlchemy()
 

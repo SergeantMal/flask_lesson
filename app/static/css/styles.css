@@ -25,3 +25,133 @@ html, body {
 }
 
 
+/* Стили для погодного виджета */
+.weather-widget-container {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    z-index: 1000;
+    width: 150px;
+    transform: scale(0.7);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-in-out;
+}
+
+.weather-widget-container:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.weather-widget {
+    color: #39ff14;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.weather-widget:hover {
+    box-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
+}
+
+.weather-widget::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    animation: rotate 20s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.weather-content {
+    position: relative;
+    z-index: 1;
+}
+
+.weather-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 5px;
+    filter: drop-shadow(0 0 5px #39ff14);
+    transition: transform 0.3s ease-in-out;
+}
+
+.weather-widget-container:hover .weather-icon {
+    transform: scale(1.2);
+}
+
+.weather-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.temp {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 3px 0;
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+    transition: all 0.3s ease-in-out;
+}
+
+.weather-widget-container:hover .temp {
+    font-size: 32px;
+    text-shadow: 0 0 12px rgba(57, 255, 20, 0.8);
+}
+
+.city {
+    font-size: 12px;
+    margin: 3px 0;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease-in-out;
+}
+
+.weather-widget-container:hover .city {
+    font-size: 14px;
+}
+
+.condition {
+    font-size: 10px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease-in-out;
+}
+
+.weather-widget-container:hover .condition {
+    font-size: 12px;
+    opacity: 1;
+}
+
+.details {
+    display: none; /* Скрываем детали в компактном виде */
+}
+
+.location-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 3px;
+    vertical-align: middle;
+    filter: invert(68%) sepia(89%) saturate(427%) hue-rotate(58deg) brightness(101%) contrast(105%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.weather-widget-container:hover .location-icon {
+    transform: scale(1.2);
+}
