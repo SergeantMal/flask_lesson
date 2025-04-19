@@ -155,3 +155,5 @@ html, body {
 .weather-widget-container:hover .location-icon {
     transform: scale(1.2);
 }
+
+<!-- Стили для погодного виджета -->
