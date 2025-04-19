@@ -35,8 +35,10 @@ IPINFO_TOKEN = '83796ee2e81f45'
 
 @routes.route('/detect-location')
 def detect_location():
+    client_ip = request.remote_addr  # Получаем IP-адрес клиента
+
     try:
-        response = requests.get(f'https://ipinfo.io/json?token={IPINFO_TOKEN}')
+        response = requests.get(f'https://ipinfo.io/{client_ip}/json?token={IPINFO_TOKEN}')
         data = response.json()
         city = data.get('city', 'Default City')
         return jsonify({'city': city})
