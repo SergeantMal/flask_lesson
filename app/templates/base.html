@@ -106,52 +106,73 @@
         iconContainer.innerHTML = `<img src="${iconPath}" alt="${current.condition.text}">`;
     }
 
-    // Функция для генерации имени иконки
-    function getIconFileName(data) {
-        const current = data.current;
-        const timePrefix = current.is_day ? 'd' : 'n';
-        const condition = current.condition.text.toLowerCase();
-        let precipitation = '';
-        let storm = '';
+// Функция для генерации имени иконки
+function getIconFileName(data) {
+    const current = data.current;
+    const isDay = current.is_day;
+    const condition = current.condition.text.toLowerCase();
+    let precipitation = '';
+    let storm = '';
 
-        if (condition.includes('гроза') || condition.includes('thunder')) {
-            storm = '_st';
-        }
-        if (condition.includes('снег с дождем') || condition.includes('sleet')) {
-            const intensity = condition.includes('небольшой') ? 1 :
-                              condition.includes('умерен') ? 2 : 3;
-            precipitation = `_rs${intensity}`;
-        }
-        else if (condition.includes('дождь') || condition.includes('rain')) {
-            const intensity = condition.includes('небольшой') ? 1 :
-                              condition.includes('умерен') ? 2 : 3;
-            precipitation = `_r${intensity}`;
-        }
-        else if (condition.includes('снег') || condition.includes('snow')) {
-            const intensity = condition.includes('небольшой') ? 1 :
-                              condition.includes('умерен') ? 2 : 3;
-            precipitation = `_s${intensity}`;
-        }
-
-        let cloudinessPart = '';
-        if (current.cloud > 25) {
-            let cloudiness;
-            if (current.cloud > 75) cloudiness = 'c3';
-            else if (current.cloud > 50) cloudiness = 'c2';
-            else cloudiness = 'c1';
-
-            cloudinessPart = `_${cloudiness}`;
-        }
-
-        let fileName;
-        if (cloudinessPart || precipitation || storm) {
-            fileName = `${timePrefix}${cloudinessPart}${precipitation}${storm}.svg`;
-        } else {
-            fileName = `${timePrefix}.svg`;
-        }
-
-        return fileName;
+    // Проверяем на грозу (приоритет 1)
+    if (condition.includes('гроза') || condition.includes('thunder')) {
+        storm = '_st';
     }
+
+    // Проверяем на снег с дождем (приоритет 2)
+    if (condition.includes('снег с дождем') || condition.includes('sleet')) {
+        const intensity = condition.includes('небольшой') ? 1 :
+                        condition.includes('умерен') ? 2 : 3;
+        precipitation = `_rs${intensity}`;
+    }
+    // Проверяем на дождь (приоритет 3)
+    else if (condition.includes('дождь') || condition.includes('rain')) {
+        const intensity = condition.includes('небольшой') ? 1 :
+                        condition.includes('умерен') ? 2 : 3;
+        precipitation = `_r${intensity}`;
+    }
+    // Проверяем на снег (приоритет 4)
+    else if (condition.includes('снег') || condition.includes('snow')) {
+        const intensity = condition.includes('небольшой') ? 1 :
+                        condition.includes('умерен') ? 2 : 3;
+        precipitation = `_s${intensity}`;
+    }
+
+    // Определяем облачность
+    let cloudiness = '';
+    if (current.cloud > 75) {
+        cloudiness = 'c3'; // Пасмурно
+    } else if (current.cloud > 50) {
+        cloudiness = 'c2'; // Облачно
+    } else if (current.cloud > 25) {
+        cloudiness = 'c1'; // Малооблачно
+    }
+
+    // Формируем имя файла
+    let fileNameParts = [];
+
+    // Добавляем префикс дня/ночи только если не полная облачность
+    if (cloudiness !== 'c3') {
+        fileNameParts.push(isDay ? 'd' : 'n');
+    }
+
+    // Добавляем облачность, если есть
+    if (cloudiness) {
+        fileNameParts.push(cloudiness);
+    }
+
+    // Добавляем осадки и грозу
+    if (precipitation) fileNameParts.push(precipitation);
+    if (storm) fileNameParts.push(storm);
+
+    // Если нет никаких параметров, используем просто день/ночь
+    const fileName = fileNameParts.length > 0
+        ? fileNameParts.join('_') + '.svg'
+        : (isDay ? 'd.svg' : 'n.svg');
+
+    console.log('Generated icon name:', fileName, 'for condition:', condition);
+    return fileName;
+}
 
     // Функция получения данных о погоде
     async function getWeather(city) {
