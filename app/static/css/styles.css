@@ -29,7 +29,8 @@ html, body {
 .weather-widget-container {
     position: fixed;
     bottom: 100px;
-    right: 20px;
+    left: 20px;
+    right: auto;
     z-index: 1000;
     width: 150px;
     transform: scale(0.7);
@@ -37,8 +38,15 @@ html, body {
     transition: transform 0.3s ease-in-out;
 }
 
+@media (max-width: 768px) {
+    .weather-widget-container {
+        transform: scale(0.6);
+        bottom: 120px; /* чуть выше футера */
+    }
+}
+
 .weather-widget-container:hover {
-    transform: scale(1.05) translateY(-10px);
+    transform: scale(0.95) translateY(-5px);
 }
 
 .weather-widget {
@@ -46,7 +54,8 @@ html, body {
     padding: 15px;
     border-radius: 12px;
     text-align: center;
-    border: 1px solid rgba(57, 255, 20, 0.2);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(57, 255, 20, 0.3);
     box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
     position: relative;
     overflow: hidden;
@@ -156,4 +165,41 @@ html, body {
     transform: scale(1.2);
 }
 
-<!-- Стили для погодного виджета -->
+.weather-widget-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #111;
+    color: #39ff14;
+    border: 2px solid #39ff14;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 1100;
+    box-shadow: 0 0 10px #39ff14;
+    transition: all 0.3s ease-in-out;
+}
+
+.weather-widget-toggle-btn:hover {
+    background-color: #222;
+    box-shadow: 0 0 20px #39ff14;
+}
+
+.weather-widget-container {
+    position: fixed;
+    bottom: 100px;
+    left: 20px;
+    z-index: 1000;
+    width: 180px;
+    transform: translateX(-110%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s ease-in-out;
+}
+
+.weather-widget-container.open {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}

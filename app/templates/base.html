@@ -11,6 +11,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
+
+<!-- Кнопка-переключатель -->
+<button class="weather-widget-toggle-btn" id="toggleWeather">
+    🌤 Погода
+</button>
+
 <body class="bg-dark text-light d-flex flex-column min-vh-100">
 
     <!-- Шапка -->
@@ -88,8 +94,7 @@
     <!-- Скрипт для погодного виджета -->
 <script>
     // Конфигурация
-    const ICON_BASE_PATH = '{{ url_for("static", filename="images/new/") }}';
-    const DEFAULT_CITY = 'Москва';  // Пример города по умолчанию, замените на нужный
+    const DEFAULT_CITY = 'Москва';  // Пример города по умолчанию
 
     // Функция для обновления интерфейса погоды
     function updateWeather(data) {
@@ -99,80 +104,11 @@
         document.getElementById('temperature').textContent = `${Math.round(current.temp_c)}°`;
         document.getElementById('weatherCondition').textContent = current.condition.text;
 
-        // Установка иконки
-        const iconFileName = getIconFileName(data);
-        const iconPath = `${ICON_BASE_PATH}${iconFileName}`;
+        // Используем иконку из API
+        const iconUrl = `https:${current.condition.icon}`;
         const iconContainer = document.getElementById('weatherIcon');
-        iconContainer.innerHTML = `<img src="${iconPath}" alt="${current.condition.text}">`;
+        iconContainer.innerHTML = `<img src="${iconUrl}" alt="${current.condition.text}">`;
     }
-
-// Функция для генерации имени иконки
-function getIconFileName(data) {
-    const current = data.current;
-    const isDay = current.is_day;
-    const condition = current.condition.text.toLowerCase();
-    let precipitation = '';
-    let storm = '';
-
-    // Проверяем на грозу (приоритет 1)
-    if (condition.includes('гроза') || condition.includes('thunder')) {
-        storm = '_st';
-    }
-
-    // Проверяем на снег с дождем (приоритет 2)
-    if (condition.includes('снег с дождем') || condition.includes('sleet')) {
-        const intensity = condition.includes('небольшой') ? 1 :
-                        condition.includes('умерен') ? 2 : 3;
-        precipitation = `_rs${intensity}`;
-    }
-    // Проверяем на дождь (приоритет 3)
-    else if (condition.includes('дождь') || condition.includes('rain')) {
-        const intensity = condition.includes('небольшой') ? 1 :
-                        condition.includes('умерен') ? 2 : 3;
-        precipitation = `_r${intensity}`;
-    }
-    // Проверяем на снег (приоритет 4)
-    else if (condition.includes('снег') || condition.includes('snow')) {
-        const intensity = condition.includes('небольшой') ? 1 :
-                        condition.includes('умерен') ? 2 : 3;
-        precipitation = `_s${intensity}`;
-    }
-
-    // Определяем облачность
-    let cloudiness = '';
-    if (current.cloud > 75) {
-        cloudiness = 'c3'; // Пасмурно
-    } else if (current.cloud > 50) {
-        cloudiness = 'c2'; // Облачно
-    } else if (current.cloud > 25) {
-        cloudiness = 'c1'; // Малооблачно
-    }
-
-    // Формируем имя файла
-    let fileNameParts = [];
-
-    // Добавляем префикс дня/ночи только если не полная облачность
-    if (cloudiness !== 'c3') {
-        fileNameParts.push(isDay ? 'd' : 'n');
-    }
-
-    // Добавляем облачность, если есть
-    if (cloudiness) {
-        fileNameParts.push(cloudiness);
-    }
-
-    // Добавляем осадки и грозу
-    if (precipitation) fileNameParts.push(precipitation);
-    if (storm) fileNameParts.push(storm);
-
-    // Если нет никаких параметров, используем просто день/ночь
-    const fileName = fileNameParts.length > 0
-        ? fileNameParts.join('_') + '.svg'
-        : (isDay ? 'd.svg' : 'n.svg');
-
-    console.log('Generated icon name:', fileName, 'for condition:', condition);
-    return fileName;
-}
 
     // Функция получения данных о погоде
     async function getWeather(city) {
@@ -185,13 +121,13 @@ function getIconFileName(data) {
         } catch (error) {
             console.error('Ошибка:', error);
             if (city !== DEFAULT_CITY) {
-                // Если не удалось получить погоду для текущего города, пробуем снова с городом по умолчанию
                 getWeather(DEFAULT_CITY);
             } else {
                 document.getElementById('cityText').textContent = 'Ошибка';
             }
         }
     }
+
 
     // Функция для получения местоположения по GPS
     async function detectLocationFromGPS() {
@@ -268,6 +204,10 @@ function getIconFileName(data) {
 
     // Запуск виджета
     initWidget();
+    document.getElementById('toggleWeather').addEventListener('click', () => {
+    const container = document.querySelector('.weather-widget-container');
+    container.classList.toggle('open');
+    });
 </script>
 
 
